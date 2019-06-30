@@ -1,5 +1,5 @@
 ## 前言:
-**Learning IO, learning netty !**
+**Learning IO, learning netty !**<br>
 
 > **尚未完成，持续更新中...!**
 
@@ -15,7 +15,6 @@
   应用
 
 - 业界常见的涉及到网络通信的相关中间件大部分基于Netty实现网络层,如下图所示:
-
 ![中间件](pic/Middleware.jpg)
 
 ### 『 基础 - 入门 』
@@ -27,3 +26,6 @@
 - ⚒ ：
 
 - ⚒ ：
+
+## 参考资源
+![netty-learning-example](https://github.com/sanshengshui/netty-learning-example)
