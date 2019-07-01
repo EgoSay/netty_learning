@@ -13,6 +13,7 @@ import java.net.Socket;
 public class TimeServer {
 
     public static void main(String[] args) throws IOException {
+        // 设置默认监听端口
         int port = 8080;
         if (args != null && args.length > 0) {
             try {

@@ -1,5 +1,7 @@
 package com.ego.netty.BIO;
 
+import java.io.BufferedReader;
+import java.io.PrintWriter;
 import java.net.Socket;
 
 /**
@@ -10,12 +12,20 @@ import java.net.Socket;
  */
 public class TimeServerHandler implements Runnable {
 
-    public TimeServerHandler(Socket socket) {
+    private Socket socket;
 
+    public TimeServerHandler(Socket socket) {
+        this.socket = socket;
     }
 
     @Override
     public void run() {
+        BufferedReader in = null;
+        PrintWriter out = null;
+        try {
 
+        } catch (Exception e) {
+
+        }
     }
 }
