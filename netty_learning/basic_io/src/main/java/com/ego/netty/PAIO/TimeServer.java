@@ -5,6 +5,7 @@ import com.ego.netty.BIO.TimeServerHandler;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Date;
 
 /**
  * @author Ego
@@ -27,6 +28,7 @@ public class TimeServer {
         try {
             server = new ServerSocket(port);
             System.out.println("The time server is start in port:" + port);
+            System.out.println("Now Times is: " + new Date());
             Socket socket = null;
             TimeServerHandlerExecutePool timeServerHandlerExecutePool = new TimeServerHandlerExecutePool(5, 20);
             while (true) {
@@ -38,6 +40,7 @@ public class TimeServer {
         } finally {
             if (server != null) {
                 System.out.println("The time server close");
+                System.out.println("Now Times is: " + new Date());
                 server.close();
                 server = null;
             }
