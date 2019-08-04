@@ -2,6 +2,7 @@ package com.ego.netty.BIO;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.Date;
 
 /**
  * @author Ego
@@ -10,15 +11,10 @@ import java.net.Socket;
  * @Description
  */
 public class TimeServerClient {
-    public static void main(String[] args) {
+
+    public  void RunTimeServerClient() {
         int port = 8080;
-        if (args != null && args.length > 0) {
-            try {
-                port = Integer.valueOf(args[0]);
-            } catch (NumberFormatException e) {
-                // 采用默认值
-            }
-        }
+
         Socket socket = null;
         BufferedReader in = null;
         PrintWriter out = null;
@@ -28,9 +24,10 @@ public class TimeServerClient {
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()), true);
             out.println("QUERY TIME ORDER");
-            System.out.println("Send Order to Server Success");
+            System.out.println("Send Order to Server Success, Now Times is " + new Date());
             String respon = in.readLine();
             System.out.println("Now is:" + respon);
+            System.out.println("Now Times is: " + new Date());
 
         } catch (IOException e) {
             e.printStackTrace();
