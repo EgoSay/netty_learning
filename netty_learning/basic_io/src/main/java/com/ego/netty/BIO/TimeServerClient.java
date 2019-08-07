@@ -12,7 +12,7 @@ import java.util.Date;
  */
 public class TimeServerClient {
 
-    public  void RunTimeServerClient() {
+    public  void RunTimeServerClient() throws IOException{
         int port = 8080;
 
         Socket socket = null;
@@ -24,13 +24,13 @@ public class TimeServerClient {
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()), true);
             out.println("QUERY TIME ORDER");
-            System.out.println("Send Order to Server Success, Now Times is " + new Date());
+            System.out.println("Send Order to Server Success ");
             String respon = in.readLine();
-            System.out.println("Now is:" + respon);
-            System.out.println("Now Times is: " + new Date());
+            System.out.println("Now time is:" + respon);
 
         } catch (IOException e) {
-            e.printStackTrace();
+            // e.printStackTrace();
+            throw e;
         } finally {
             if (in != null) {
                 try {
