@@ -1,9 +1,6 @@
 package com.ego.netty.PAIO;
 
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 /**
  * @author Ego
@@ -12,11 +9,12 @@ import java.util.concurrent.TimeUnit;
  * @Description
  */
 public class TimeServerHandlerExecutePool {
-    private Executor executor;
+    private ThreadPoolExecutor executor;
 
     public TimeServerHandlerExecutePool(int maxPoolSize, int queueSize) {
         executor = new ThreadPoolExecutor(Runtime.getRuntime().availableProcessors(), maxPoolSize,
                 120L, TimeUnit.SECONDS, new ArrayBlockingQueue<>(queueSize));
+        executor.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardPolicy());
     }
 
     public void execute(java.lang.Runnable task) {

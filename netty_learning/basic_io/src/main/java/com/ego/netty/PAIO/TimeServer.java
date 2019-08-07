@@ -28,7 +28,7 @@ public class TimeServer {
         try {
             server = new ServerSocket(port);
             System.out.println("The time server is start in port:" + port);
-            System.out.println("Now Times is: " + new Date());
+
             Socket socket = null;
             TimeServerHandlerExecutePool timeServerHandlerExecutePool = new TimeServerHandlerExecutePool(5, 20);
             while (true) {
