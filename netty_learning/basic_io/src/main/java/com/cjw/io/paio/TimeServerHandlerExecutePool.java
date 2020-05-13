@@ -1,4 +1,4 @@
-package com.ego.netty.PAIO;
+package com.cjw.io.paio;
 
 import java.util.concurrent.*;
 
@@ -11,8 +11,8 @@ import java.util.concurrent.*;
 public class TimeServerHandlerExecutePool {
     private ThreadPoolExecutor executor;
 
-    public TimeServerHandlerExecutePool(int maxPoolSize, int queueSize) {
-        executor = new ThreadPoolExecutor(Runtime.getRuntime().availableProcessors(), maxPoolSize,
+    public TimeServerHandlerExecutePool(int coreSize, int maxPoolSize, int queueSize) {
+        executor = new ThreadPoolExecutor(coreSize, maxPoolSize,
                 120L, TimeUnit.SECONDS, new ArrayBlockingQueue<>(queueSize));
         executor.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardPolicy());
     }

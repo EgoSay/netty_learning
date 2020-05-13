@@ -1,6 +1,7 @@
-package com.ego.netty.test;
+package com.cjw.io.test;
 
-import com.ego.netty.BIO.TimeServerClient;
+
+import com.cjw.io.bio.TimeServerClient;
 import org.junit.Test;
 
 import java.util.concurrent.atomic.AtomicInteger;

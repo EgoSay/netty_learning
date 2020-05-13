@@ -1,8 +1,7 @@
-package com.ego.netty.BIO;
+package com.cjw.io.bio;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.Date;
 
 /**
  * @author Ego
@@ -20,7 +19,6 @@ public class TimeServerClient {
         PrintWriter out = null;
         try {
             socket = new Socket("127.0.0.1", port);
-
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()), true);
             out.println("QUERY TIME ORDER");
@@ -28,9 +26,8 @@ public class TimeServerClient {
             String respon = in.readLine();
             System.out.println("Now time is:" + respon);
 
-        } catch (IOException e) {
-            // e.printStackTrace();
-            throw e;
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             if (in != null) {
                 try {

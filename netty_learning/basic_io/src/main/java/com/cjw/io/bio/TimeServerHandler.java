@@ -1,4 +1,4 @@
-package com.ego.netty.BIO;
+package com.cjw.io.bio;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -37,6 +37,7 @@ public class TimeServerHandler implements Runnable {
                 System.out.println("The time server receive order: " + body);
                 currentTime = "QUERY TIME ORDER".equalsIgnoreCase(body) ? new java.util.Date(System.currentTimeMillis()).toString() : "BAD ORDER";
                 out.println(currentTime);
+                Thread.sleep(10000);
                 System.out.println("Now time is: " + currentTime);
             }
         } catch (Exception e) {
