@@ -13,7 +13,7 @@ public class TimeServerHandlerExecutePool {
 
     public TimeServerHandlerExecutePool(int coreSize, int maxPoolSize, int queueSize) {
         executor = new ThreadPoolExecutor(coreSize, maxPoolSize,
-                120L, TimeUnit.SECONDS, new ArrayBlockingQueue<>(queueSize));
+                120L, TimeUnit.SECONDS, new ArrayBlockingQueue(queueSize));
         executor.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardPolicy());
     }
 
