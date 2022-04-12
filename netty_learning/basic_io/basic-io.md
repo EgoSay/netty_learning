@@ -15,5 +15,5 @@
 
 - 异步IO（asynchronous IO）
 
-> [聊聊Linux 五种IO模型](https://www.jianshu.com/p/aed6067eeac9)
+> [聊聊Linux 五种IO模型](https://www.jianshu.com/p/486b0965c296)
 
