@@ -1,14 +1,13 @@
-package com.cjw.io.nio;
+package com.cjw.netty.aio;
 
 /**
  * @author chenjw
  * @version 1.0
- * @date 2022/4/11 15:50
+ * @date 2022/4/12 17:57
  */
-public class NioTimeServer {
+public class AioTimeClient {
 
     public static void main(String[] args) {
-        // 设置默认监听端口
         int port = 8080;
         if (args != null && args.length > 0) {
             try {
@@ -17,8 +16,8 @@ public class NioTimeServer {
                 // 采用默认值
             }
         }
-
-        MultiplexerTimeServer timeServer = new MultiplexerTimeServer(port);
-        new Thread(timeServer, "NIO-MultiplexerTimeServer").start();
+        for (int i = 0; i < 10; i++) {
+            new Thread(new AsyncTimeClientHandler("127.0.0.1", port, "QUERY TIME ORDER " + i)).start();
+        }
     }
 }

@@ -1,10 +1,11 @@
-package com.cjw.io.nio;
+package com.cjw.netty.nio;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
+import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
@@ -13,30 +14,42 @@ import java.util.Set;
 /**
  * @author chenjw
  * @version 1.0
- * @date 2022/4/11 19:18
+ * @date 2022/4/11 15:52
  */
-public class NioTimeClientHandle implements Runnable {
+public class MultiplexerTimeServer implements Runnable{
 
-    private String host;
-    private int port;
     private Selector selector;
-    private SocketChannel socketChannel;
-    private volatile boolean stop;
-    private String mes;
 
-    public NioTimeClientHandle(String host, int port, String mes) {
-        this.host = host;
-        this.port = port;
-        this.mes = mes;
+    private ServerSocketChannel socketChannel;
+
+    private volatile boolean stop;
+
+    /**
+     * 初始化多路复用器，绑定监听端口
+     * @param port
+     */
+    public MultiplexerTimeServer(int port) {
         try {
-            selector = Selector.open();
-            socketChannel = SocketChannel.open();
+            // 打开 ServerSocketChannel，用于监听客户端的连接，它是所有客户端连接的父管道
+            socketChannel = ServerSocketChannel.open();
+            // 绑定监听端口，设置为 非阻塞模式
+            socketChannel.socket().bind(new InetSocketAddress(port), 1024);
             socketChannel.configureBlocking(false);
+            // 创建 多路复用器
+            selector = Selector.open();
+            // 将 ServerSocketChannel 注册到 Reactor 线程的多路复用器 Selector 上，监听 accept 事件
+            socketChannel.register(selector, SelectionKey.OP_ACCEPT);
+            System.out.println("【NIO】The time server is start in port:" + port);
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(1);
         }
     }
+
+    public void stop() {
+        this.stop = true;
+    }
+
 
     /**
      * When an object implementing interface <code>Runnable</code> is used
@@ -51,20 +64,14 @@ public class NioTimeClientHandle implements Runnable {
      */
     @Override
     public void run() {
-        try {
-            doConnect();
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
         // 循环查询准备就绪的 key
         while (!stop) {
             try {
-                SelectionKey selectionKey;
                 selector.select(1000);
                 Set<SelectionKey> selectionKeys = selector.selectedKeys();
                 Iterator<SelectionKey> iterator = selectionKeys.iterator();
 
+                SelectionKey selectionKey;
                 while (iterator.hasNext()) {
                     selectionKey = iterator.next();
                     iterator.remove();
@@ -72,6 +79,7 @@ public class NioTimeClientHandle implements Runnable {
                     try {
                         handleInput(selectionKey);
                     } catch (Exception e) {
+                        e.printStackTrace();
                         if (selectionKey != null) {
                             selectionKey.cancel();
                             if (selectionKey.channel() != null) {
@@ -96,17 +104,17 @@ public class NioTimeClientHandle implements Runnable {
 
     private void handleInput(SelectionKey key) throws IOException {
         if (key.isValid()) {
-            SocketChannel sc = (SocketChannel) key.channel();
-            if (key.isConnectable()) {
-                if (sc.finishConnect()) {
-                    sc.register(selector, SelectionKey.OP_READ);
-                    doWrite(sc);
-                } else {
-                    System.exit(1);
-                }
+            if (key.isAcceptable()) {
+                // 监听到有新的客户端接入，处理新的接入请求, 完成 TCP 三次握手，建立物理链路
+                ServerSocketChannel ssc = (ServerSocketChannel) key.channel();
+                SocketChannel sc = ssc.accept();
+                sc.configureBlocking(false);
+                // 注册到多路复用器上，监听读操作，读取客户端发送的网络消息
+                sc.register(selector, SelectionKey.OP_READ);
             }
             if (key.isReadable()) {
                 // 异步读取客户端请求消息到缓冲区
+                SocketChannel sc = (SocketChannel) key.channel();
                 ByteBuffer readBuffer = ByteBuffer.allocate(1024);
                 int readBytes = sc.read(readBuffer);
                 if (readBytes > 0) {
@@ -114,8 +122,9 @@ public class NioTimeClientHandle implements Runnable {
                     byte[] bytes = new byte[readBuffer.remaining()];
                     readBuffer.get(bytes);
                     String body = new String(bytes, StandardCharsets.UTF_8);
-                    System.out.println("【NIO】Now is: " + body);
-                    this.stop = true;
+                    System.out.println("【NIO】the time server receive order: " + body);
+                    String currentTime = new java.util.Date(System.currentTimeMillis()).toString();
+                    doWrite(sc, currentTime);
                 } else if (readBytes < 0) {
                     // 对端链路关闭
                     key.cancel();
@@ -125,23 +134,13 @@ public class NioTimeClientHandle implements Runnable {
         }
     }
 
-    private void doConnect() throws IOException {
-        if (socketChannel.connect(new InetSocketAddress(host, port))) {
-            socketChannel.register(selector, SelectionKey.OP_READ);
-            doWrite(socketChannel);
-        } else {
-            socketChannel.register(selector, SelectionKey.OP_CONNECT);
-        }
-    }
-
-    private void doWrite(SocketChannel sc) throws IOException {
-        byte[] bytes = mes.getBytes();
-        ByteBuffer writeBuffer = ByteBuffer.allocate(bytes.length);
-        writeBuffer.put(bytes);
-        writeBuffer.flip();
-        sc.write(writeBuffer);
-        if (!writeBuffer.hasRemaining()) {
-            System.out.println("【NIO】Send Order" + mes + " to Server Success");
+    private void doWrite(SocketChannel channel, String response) throws IOException {
+        if (response != null && response.trim().length() > 0) {
+            byte[] bytes = response.getBytes();
+            ByteBuffer writeBuffer = ByteBuffer.allocate(bytes.length);
+            writeBuffer.put(bytes);
+            writeBuffer.flip();
+            channel.write(writeBuffer);
         }
     }
 }

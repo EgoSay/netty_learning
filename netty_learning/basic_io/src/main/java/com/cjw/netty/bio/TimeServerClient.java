@@ -1,4 +1,4 @@
-package com.cjw.io.bio;
+package com.cjw.netty.bio;
 
 import java.io.*;
 import java.net.Socket;

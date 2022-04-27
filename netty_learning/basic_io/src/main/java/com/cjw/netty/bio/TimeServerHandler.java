@@ -1,4 +1,4 @@
-package com.cjw.io.bio;
+package com.cjw.netty.bio;
 
 import java.io.BufferedReader;
 import java.io.IOException;

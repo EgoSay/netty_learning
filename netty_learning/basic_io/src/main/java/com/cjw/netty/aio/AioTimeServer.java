@@ -1,13 +1,14 @@
-package com.cjw.io.aio;
+package com.cjw.netty.aio;
 
 /**
  * @author chenjw
  * @version 1.0
- * @date 2022/4/12 17:57
+ * @date 2022/4/12 17:07
  */
-public class AioTimeClient {
+public class AioTimeServer {
 
     public static void main(String[] args) {
+        // 设置默认监听端口
         int port = 8080;
         if (args != null && args.length > 0) {
             try {
@@ -16,8 +17,8 @@ public class AioTimeClient {
                 // 采用默认值
             }
         }
-        for (int i = 0; i < 10; i++) {
-            new Thread(new AsyncTimeClientHandler("127.0.0.1", port, "QUERY TIME ORDER " + i)).start();
-        }
+
+        AsyncTimeServerHandler timeServer = new AsyncTimeServerHandler(port);
+        new Thread(timeServer, "AIO-AsyncTimeServerHandler").start();
     }
 }
