@@ -19,13 +19,13 @@
 
 ### 『 基础 - 入门 』
 
-- ⚒ ：[常见IO模型](basic_io/basic-io.md)
+- ✌：[常见IO模型](basic_io/basic-io.md)
 
-- ⚒ ：[Netty 核心组件](netty-core-components.md)
+- ✌： [Netty 核心组件](docs/netty-core-components.md)
 
-- ⚒ ：
+- ⚒：[Netty 基础概念]
 
-- ⚒ ：
+- ⚒：
 
 ## 参考资源
 ![netty-learning-example](https://github.com/sanshengshui/netty-learning-example)
