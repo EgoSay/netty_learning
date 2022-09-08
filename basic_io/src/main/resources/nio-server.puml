@@ -1,0 +1,13 @@
+@startuml
+NioServer -> NioServer: 1、打开 ServerSocketChannel \n2、绑定监听地址 InetSocketAddress
+ReactorThread -> ReactorThread: 3、创建 Selector，启动线程
+NioServer -> ReactorThread: 4、将 ServerSocketChannel 注册到 Selector，监听
+ReactorThread --> ioHandler: 5、Selector 轮询就绪的 Key
+ioHandler --> ioHandler: 6、handleAccept() 处理新的客户端接入
+ioHandler --> ioHandler: 7、设置新建客户端连接的 Socket 参数
+ReactorThread <-- ioHandler: 8、向 Reactor 线程的多路复用器注册 OP_READER 事件
+ReactorThread --> ioHandler: 9、异步读取客户端请求消息到 ByteBuffer 缓冲区
+ioHandler --> ioHandler: 10、编解码处理消息
+ReactorThread <-- ioHandler: 11、异步写 ByteBuffer 到 SocketChannel
+
+@enduml
