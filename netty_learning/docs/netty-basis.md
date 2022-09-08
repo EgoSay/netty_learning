@@ -12,6 +12,8 @@
 5. **内存零拷贝**：尽量减少不必要的内存拷贝，实现了更高效率的传输。zero-copy
 
 ### Netty 的零拷贝
+> 传统的zero-copy是IO传输过程中，数据无需中内核态到用户态、用户态到内核态的数据拷贝，减少拷贝次数, Netty的zero-copy则是完全在用户态，或者说传输层的zero-copy机制
+
 主要包含三个方面：
 - Netty 的接收和发送 ByteBuffer 采用 DIRECT BUFFER，使用堆外直接内存进行 Socket 读写，不需要进行字节缓冲区的二次拷贝。如果使用传统的堆内存（HEAP BUFFERS）进行 Socket 读写，JVM 会将堆内存 Buffer 拷贝一份到直接内存中，然后才写入 Socket 中。相比于堆外直接内存，消息在发送过程中多了一次缓冲区的内存拷贝。
 

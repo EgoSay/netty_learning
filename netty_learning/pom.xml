@@ -11,6 +11,8 @@
     <modules>
         <module>basic_io</module>
         <module>netty-example</module>
+        <module>netty-rpc</module>
+        <module>netty-im</module>
     </modules>
 
     <properties>
